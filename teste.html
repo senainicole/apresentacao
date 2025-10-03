@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdStrike - Atualização de Antivírus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.5s ease;
+        }
+
+        .update-container {
+            background: white;
+            padding: 70px 90px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 580px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .logo {
+            margin-bottom: 32px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e01f27;
+            letter-spacing: -0.5px;
+        }
+
+        .icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #e01f27 0%, #c41e3a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: #4a5568;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        .version-info {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .version-info-item {
+            display: flex;
+            justify-content: space-between;
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .version-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .version-info-label {
+            color: #718096;
+        }
+
+        .update-button {
+            background: linear-gradient(135deg, #e01f27 0%, #c41e3a 100%);
+            color: white;
+            border: none;
+            padding: 16px 60px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 12px rgba(224, 31, 39, 0.25);
+        }
+
+        .update-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(224, 31, 39, 0.35);
+        }
+
+        .update-button:active {
+            transform: translateY(0);
+        }
+
+        .blue-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0078d7;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 60px;
+            z-index: 10000;
+        }
+
+        .blue-screen h2 {
+            font-size: 120px;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .blue-screen p {
+            font-size: 24px;
+            color: white;
+            max-width: 700px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .error-code {
+            margin-top: 40px;
+            font-size: 18px;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .hack-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+
+        .matrix-char {
+            position: absolute;
+            color: #00ff00;
+            font-size: 18px;
+            font-weight: normal;
+            text-shadow: 0 0 8px #00ff00;
+            animation: fall linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .hack-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #e01f27;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 15px #e01f27;
+            animation: blink 1.5s infinite;
+            z-index: 1000;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            border: 2px solid #e01f27;
+            padding: 24px 40px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.4; }
+        }
+
+        .hack-terminal {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00ff00;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            z-index: 999;
+            line-height: 1.8;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e01f27;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="update-container" id="updateContainer">
+        <div class="logo">
+            <div class="logo-text">CROWDSTRIKE</div>
+        </div>
+        
+        <div class="icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+            </svg>
+        </div>
+        
+        <div class="security-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            ATUALIZAÇÃO CRÍTICA
+        </div>
+        
+        <h1>Atualização de Antivírus</h1>
+        <p>Uma atualização crítica de definições de ameaças está disponível. Esta atualização inclui proteção contra novas vulnerabilidades e melhora a detecção de malware.</p>
+        
+        <div class="version-info">
+            <div class="version-info-item">
+                <span class="version-info-label">Versão atual:</span>
+                <span>Falcon Sensor 7.12.0</span>
+            </div>
+            <div class="version-info-item">
+                <span class="version-info-label">Nova versão:</span>
+                <span>Falcon Sensor 7.13.1</span>
+            </div>
+            <div class="version-info-item">
+                <span class="version-info-label">Tamanho:</span>
+                <span>124 MB</span>
+            </div>
+            <div class="version-info-item">
+                <span class="version-info-label">Prioridade:</span>
+                <span style="color: #e01f27; font-weight: 600;">Alta</span>
+            </div>
+        </div>
+        
+        <button class="update-button" onclick="startUpdate()">Atualizar</button>
+    </div>
+
+    <div class="blue-screen" id="blueScreen">
+        <h2>:(</h2>
+        <p>Seu dispositivo encontrou um problema e precisa ser reiniciado.</p>
+        <p>Estamos coletando algumas informações sobre o erro e reiniciaremos automaticamente.</p>
+        <div class="error-code">Código de erro: CRITICAL_PROCESS_DIED</div>
+    </div>
+
+    <div class="hack-screen" id="hackScreen">
+        <div class="hack-terminal">
+            > Estabelecendo conexão remota...<br>
+            > Bypass de firewall: SUCESSO<br>
+            > Desativando CrowdStrike Falcon...<br>
+            > Acesso root obtido<br>
+            > Injetando payload...
+        </div>
+        <div class="hack-message">⚠ SISTEMA COMPROMETIDO ⚠</div>
+    </div>
+
+    <script>
+        function startUpdate() {
+            // Sempre mostra os dois efeitos em sequência
+            showHackScreen();
+            
+            // Depois de 3 segundos, muda para tela azul
+            setTimeout(() => {
+                showBlueScreen();
+            }, 3000);
+        }
+
+        function showBlueScreen() {
+            document.getElementById('updateContainer').style.display = 'none';
+            document.getElementById('hackScreen').style.display = 'none';
+            document.getElementById('blueScreen').style.display = 'flex';
+        }
+
+        function showHackScreen() {
+            document.getElementById('updateContainer').style.display = 'none';
+            const hackScreen = document.getElementById('hackScreen');
+            hackScreen.style.display = 'block';
+
+            const chars = '01';
+            const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()<>[]{}';
+            
+            // Criar muito mais caracteres
+            for (let i = 0; i < 500; i++) {
+                setTimeout(() => {
+                    const char = document.createElement('div');
+                    char.className = 'matrix-char';
+                    // 80% binários, 20% outros caracteres
+                    if (Math.random() < 0.8) {
+                        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                    } else {
+                        char.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    }
+                    char.style.left = Math.random() * 100 + '%';
+                    char.style.top = -20 + 'px';
+                    char.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                    hackScreen.appendChild(char);
+
+                    setTimeout(() => char.remove(), 4000);
+                }, i * 8);
+            }
+            
+            // Adicionar colunas de binários contínuas
+            for (let col = 0; col < 30; col++) {
+                createBinaryColumn(hackScreen, col * 3.3);
+            }
+        }
+        
+        function createBinaryColumn(container, leftPercent) {
+            setInterval(() => {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = Math.random() < 0.5 ? '0' : '1';
+                char.style.left = leftPercent + '%';
+                char.style.top = -20 + 'px';
+                char.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                container.appendChild(char);
+                
+                setTimeout(() => char.remove(), 4000);
+            }, Math.random() * 200 + 100);
+        }
+    </script>
+</body>
+</html>
